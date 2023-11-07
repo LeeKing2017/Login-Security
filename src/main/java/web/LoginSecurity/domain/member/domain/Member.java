@@ -1,4 +1,4 @@
-package web.LoginSecurity.member.domain;
+package web.LoginSecurity.domain.member.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @EqualsAndHashCode
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Member {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MEMBER_ID")
@@ -21,12 +21,24 @@ public class Member {
     @Column(name = "PASSWORD")
     private String password;
 
+    @Column(name = "NICK_NAME")
+    private String nickname;
+
     @CreatedDate
     private LocalDateTime createTime;
 
+    public Member toEntity(String email, String password, String nickname){
+        return Member.builder()
+                .email(email)
+                .password(password)
+                .nickname(nickname)
+                .build();
+    }
+
     @Builder
-    public Member(String email, String password) {
+    public Member(String email, String password, String nickname) {
         this.email = email;
         this.password = password;
+        this.nickname = nickname;
     }
 }

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div>
+    <input type="hidden" name="status" id="status" th:value="NotAllow">
+    <input type="hidden" name="confirm" id="confirm" >
+        <div class="form-group">
+            <input type="email" name="nickname" id="nickname" style="width:250px; margin-top: -10px" placeholder="닉네임 입력">
+            <input type="password" name="password" id="password" style="width:250px; margin-top: -10px" placeholder="비밀번호 입력">
+            <input type="email" name="email" id="email" style="width:250px; margin-top: -10px" placeholder="이메일 입력">
+            <button type="button" id="sendBtn" name="sendBtn">인증번호</button>
+        </div>
+    <br>
+    <div id="mail_number" style="display: none">
+        <input type="text" name="number" id="number" style="width:250px; margin-top: -10px" placeholder="인증번호 입력">
+        <button type="button" name="confirmBtn" id="confirmBtn">이메일 인증</button>
+    </div>
+    <button id="btn-save" name="btn-save" class="btn btn-primary">회원가입 완료</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#sendBtn").click(function () {
+            $("#mail_number").css("display", "block");
+            $.ajax({
+                url: "/web/mail",
+                type: "post",
+                dataType: "json",
+                data: {"memberEmail": $("#email").val()},
+                success: function (data) {
+                    alert("인증번호 발송");
+                    $("#confirm").val(data);
+                }
+            });
+        });
+
+        $("#confirmBtn").click(function () {
+            var number1 = $("#number").val();
+            var number2 = $("#confirm").val();
+
+            if (number1 === number2) {
+                alert("인증되었습니다.");
+                $("#status").val("Allow");
+            } else {
+                alert("번호가 다릅니다.");
+                $("#status").val("NotAllow");
+            }
+        });
+
+        $("#btn-save").click(function () {
+            let data = {
+                "nickname": $("#nickname").val(),
+                "password": $("#password").val(),
+                "email": $("#email").val()
+            }
+
+            var loginAllowStatus = $("#status").val();
+            if (loginAllowStatus === "Allow") {
+                $.ajax({
+                    url: "/web/member",
+                    type: "post",
+                    dataType: "json",
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (url) {
+                        console.log(url);
+                        alert("회원가입을 축하드립니다.")
+                        $(location).attr('href',url);
+                    }
+                });
+            }
+
+            if (loginAllowStatus === "NotAllow") {
+                alert("이메일 인증번호가 맞지않습니다.")
+            }
+        })
+    });
+
+</script>
+</body>
+</html>
