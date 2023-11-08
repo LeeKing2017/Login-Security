@@ -69,7 +69,13 @@
                     data: JSON.stringify(data),
                     success: function (url) {
                         console.log(url);
-                        alert("회원가입을 축하드립니다.")
+                        alert("회원가입을 축하드립니다.");
+                        $(location).attr('href',url);
+                    },
+                    error: function (url){
+                        console.log(url)
+                        console.log("회원가입 실패")
+                        alert("회원가입에 실패했습니다");
                         $(location).attr('href',url);
                     }
                 });
