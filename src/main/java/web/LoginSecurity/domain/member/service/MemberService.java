@@ -11,5 +11,5 @@ public interface MemberService {
 
     Member findMemberByEmail(String memberEmail);
 
-    Boolean isLogin(Member member, String passowrd);
+    Boolean isLoginAllowed(Member member, String passowrd);
 }

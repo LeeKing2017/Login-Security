@@ -4,11 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import web.LoginSecurity.domain.member.domain.Member;
 import web.LoginSecurity.domain.member.repository.MemberRepository;
-import web.LoginSecurity.global.exception.isExistedEmailException;
+import web.LoginSecurity.global.exception.IsExistedEmailException;
+import web.LoginSecurity.global.exception.NotFoundMemberException;
 
 import java.util.NoSuchElementException;
 
 import static web.LoginSecurity.global.exception.ExceptionMessage.EMAIL_EXISTED;
+import static web.LoginSecurity.global.exception.ExceptionMessage.MEMBER_NOT_EXISTED;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public void checkEmailAllowed(String memberEmail) {
         if (isExistedEmail(memberEmail).equals(Boolean.TRUE)){
-            throw new isExistedEmailException(EMAIL_EXISTED);
+            throw new IsExistedEmailException(EMAIL_EXISTED);
         }
     }
 
@@ -33,11 +35,11 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public Member findMemberByEmail(String memberEmail){
-        return memberRepository.findByEmail(memberEmail).orElseThrow(() -> new NoSuchElementException("해당 사용자가 존재하지 않습니다"));
+        return memberRepository.findByEmail(memberEmail).orElseThrow(() -> new NotFoundMemberException(MEMBER_NOT_EXISTED));
     }
 
     @Override
-    public Boolean isLogin(Member member, String passowrd){
-        return member.getPassword().equals(passowrd) ? Boolean.TRUE : Boolean.FALSE;
+    public Boolean isLoginAllowed(Member member, String password){
+        return member.getPassword().equals(password) ? Boolean.TRUE : Boolean.FALSE;
     }
 }
