@@ -22,4 +22,18 @@ public class MemberDto {
             this.nickname = nickname;
         }
     }
+
+    @Getter
+    @NoArgsConstructor
+    @ToString
+    public static class LoginMember{
+        private String email;
+        private String password;
+
+        @Builder
+        public LoginMember(String email, String password) {
+            this.email = email;
+            this.password = password;
+        }
+    }
 }
