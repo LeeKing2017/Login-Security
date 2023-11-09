@@ -26,14 +26,33 @@ public class MemberDto {
     @Getter
     @NoArgsConstructor
     @ToString
-    public static class LoginMember{
+    public static class LoginRequest {
         private String email;
         private String password;
+        private String reCaptchaResponse;
 
         @Builder
-        public LoginMember(String email, String password) {
+        public LoginRequest(String email, String password, String reCaptchaResponse) {
             this.email = email;
             this.password = password;
+            this.reCaptchaResponse = reCaptchaResponse;
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @ToString
+    public static class LoginResponse {
+        private boolean status;
+        private String errMsg;
+
+        public LoginResponse(boolean status, String errMsg) {
+            this.status = status;
+            this.errMsg = errMsg;
+        }
+
+        public LoginResponse(boolean status) {
+            this.status = status;
         }
     }
 }

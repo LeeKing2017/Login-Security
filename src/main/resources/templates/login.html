@@ -3,14 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <title>로그인 페이지</title>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+
+        //	화면 시작 시 g-recaptcha 생성
+        var onloadCallback = function() {
+            grecaptcha.render('g-recaptcha', {
+                'sitekey' : '6LfIaQcpAAAAAJd-ZYiDmRV8Q4z9U23TgiE-y-PG',
+                'callback' : verifyCallback,
+                'expired-callback' : expiredCallback,
+            });
+        };
+
+        //	인증 성공 시
+        var verifyCallback = function() {
+            $("#loginBtn").removeClass("disabled-btn");
+            $("#loginBtn").attr("disabled", false);
+        };
+
+        //	인증 만료 시
+        var expiredCallback = function() {
+            $("#loginBtn").addClass("disabled-btn");
+            $("#loginBtn").attr("disabled", true);
+        }
+
+        // 로그인
+        var loginBtn = function(){
+            if($("#loginBtn").hasClass('disabled-btn')){
+                alert("recaptcha 인증 후 진행이 가능합니다.");
+            } else {
+                alert("로그인 시도");
+                var email = $("#loginEmail").val();
+                var pw = $("#loginPw").val();
+                var recaptcha = $("#g-recaptcha-response").val();
+
+                $.ajax({
+                    type: "post",
+                    url: "/web/login",
+                    data: JSON.stringify({
+                        "email" : email,
+                        "password": pw,
+                        "reCaptchaResponse" : recaptcha
+                    }),
+                    dataType: "JSON",
+                    contentType: "application/json",
+                    success: function(data){
+                        if(data.status === true){
+                            alert("로그인 성공!");
+                        } else {
+                            alert(data.errMsg);
+                        }
+                    },
+                    error: function(err){
+                        alert("에러" + err.toString());
+                    }
+                });
+
+            }
+        };
+    </script>
+
 </head>
 <body>
     <div class="form-group">
-        <input type="email" name="nickname" id="nickname" style="width:250px; margin-top: -10px" placeholder="이메일 입력">
+        <input type="email" name="loginEmail" id="loginEmail" style="width:250px; margin-top: -10px" placeholder="이메일 입력">
         <br>
-        <input type="password" name="password" id="password" style="width:250px; margin-top: -10px" placeholder="비밀번호 입력">
+        <input type="password" name="loginPw" id="loginPw" style="width:250px; margin-top: -10px" placeholder="비밀번호 입력">
         <br>
-        <button type="button" id="loginBtn" name="loginBtn">로그인</button>
+        <!--reCaptcha 실행 라인-->
+        <div id="g-recaptcha"></div>
+
+        <input type="button" class="disabled-btn" id="loginBtn" name="loginBtn" value="로그인" onclick="loginBtn()" disabled>
+        <br><br>
+        <a href="http://localhost:8080/web/member" th:value="회원가입">회원 가입</a>
     </div>
 </body>
 </html>
