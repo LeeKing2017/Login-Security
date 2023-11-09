@@ -2,26 +2,19 @@ package web.LoginSecurity.domain.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import web.LoginSecurity.domain.member.domain.Member;
 import web.LoginSecurity.domain.member.dto.MemberDto;
 import web.LoginSecurity.domain.member.service.MemberService;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/web")
 public class SignUpController {
     private final MemberService memberService;
-
-    @GetMapping("/login")
-    public String loginView(){return "login";};
-
-    @GetMapping("/member")
-    public String signUpView(){
-        return "signUpForm";
-    }
 
     @PostMapping("/member")
     @ResponseBody
@@ -37,5 +30,15 @@ public class SignUpController {
         memberService.saveMember(member);
 
         return "/web/login";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody MemberDto.LoginMember loginMemberDto){
+        String requestEmail = loginMemberDto.getEmail();
+        String requestPassword = loginMemberDto.getPassword();
+
+        Member member = memberService.findMemberByEmail(requestEmail);
+
+        return memberService.isLogin(member, requestPassword) ? "로그인 성공" : "로그인 실패";
     }
 }

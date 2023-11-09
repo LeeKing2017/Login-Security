@@ -8,4 +8,8 @@ public interface MemberService {
     Boolean isExistedEmail(String memberEmail);
 
     void checkEmailAllowed(String memberEmail);
+
+    Member findMemberByEmail(String memberEmail);
+
+    Boolean isLogin(Member member, String passowrd);
 }

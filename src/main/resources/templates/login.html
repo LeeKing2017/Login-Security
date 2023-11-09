@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>로그인 페이지</title>
 </head>
 <body>
-
+    <div class="form-group">
+        <input type="email" name="nickname" id="nickname" style="width:250px; margin-top: -10px" placeholder="이메일 입력">
+        <br>
+        <input type="password" name="password" id="password" style="width:250px; margin-top: -10px" placeholder="비밀번호 입력">
+        <br>
+        <button type="button" id="loginBtn" name="loginBtn">로그인</button>
+    </div>
 </body>
 </html>
